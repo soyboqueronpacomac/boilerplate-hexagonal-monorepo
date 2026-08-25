@@ -1,17 +1,18 @@
-import express, { type Express } from 'express';
-import { checkSystemState } from '../../application/use-cases/check-system-state.js';
-import { SystemStateProviderInMemory } from '../system-state/system-state-provider-in-memory.js';
+import express, { type Application, type Router } from 'express';
+import type { ServerConfig } from '../../application/ports/config-provider.js';
 
-export const createApp = (): Express => {
-  const app = express();
-  app.use(express.json());
+export class ServerExpress {
+  public app: Application = express();
+  private readonly port: number;
 
-  const systemStateProvider = new SystemStateProviderInMemory();
+  constructor(config: ServerConfig, routes: Router) {
+    this.port = config.port;
+    this.app.use(routes);
+  }
 
-  app.get('/api/state', async (_req, res) => {
-    const response = await checkSystemState(systemStateProvider);
-    res.json(response);
-  });
-
-  return app;
-};
+  async start(): Promise<void> {
+    this.app.listen(this.port, () => {
+      console.log(`API server is running on http://localhost:${this.port}`);
+    });
+  }
+}

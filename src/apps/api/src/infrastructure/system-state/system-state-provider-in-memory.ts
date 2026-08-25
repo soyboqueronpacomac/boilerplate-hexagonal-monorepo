@@ -6,3 +6,5 @@ export class SystemStateProviderInMemory implements SystemStateProvider {
     return { status: 'ready' };
   }
 }
+
+export const systemStateProvider = new SystemStateProviderInMemory();
