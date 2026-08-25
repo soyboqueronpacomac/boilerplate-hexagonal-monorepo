@@ -1,0 +1,25 @@
+{
+  "name": "@boilerplate-hexagonal-monorepo/web",
+  "version": "0.0.1-alpha.0",
+  "description": "",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:dev": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@boilerplate-hexagonal-monorepo/api-contracts": "workspace:*",
+    "@boilerplate-hexagonal-monorepo/domain": "workspace:*"
+  },
+  "devDependencies": {
+    "jsdom": "30.0.1",
+    "vite": "8.2.2",
+    "vitest": "4.1.11"
+  }
+}

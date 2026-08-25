@@ -1,0 +1,29 @@
+{
+  "name": "@boilerplate-hexagonal-monorepo/api",
+  "version": "0.0.1-alpha.0",
+  "description": "",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:dev": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@boilerplate-hexagonal-monorepo/api-contracts": "workspace:*",
+    "@boilerplate-hexagonal-monorepo/domain": "workspace:*",
+    "express": "5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.6",
+    "@types/node": "^24.13.3",
+    "@types/supertest": "7.2.1",
+    "supertest": "7.2.2",
+    "tsx": "4.23.12",
+    "vitest": "4.1.11"
+  }
+}

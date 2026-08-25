@@ -1,0 +1,5 @@
+packages:
+  - src/apps/*
+  - src/packages/*
+allowBuilds:
+  esbuild: true

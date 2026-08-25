@@ -1,0 +1,10 @@
+{
+  "name": "@boilerplate-hexagonal-monorepo/typescript-config",
+  "version": "0.0.1-alpha.0",
+  "private": true,
+  "files": [
+    "base.json",
+    "node.json",
+    "navegador.json"
+  ]
+}

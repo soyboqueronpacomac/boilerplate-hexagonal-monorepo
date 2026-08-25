@@ -1,0 +1,28 @@
+{
+  "name": "boilerplate-hexagonal-monorepo",
+  "version": "0.0.1-alpha.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "postinstall": "pnpm --filter './src/packages/*' --if-present build",
+    "dev": "pnpm --parallel --filter './src/apps/*' dev",
+    "build": "pnpm --recursive --if-present build",
+    "typecheck": "pnpm --recursive --if-present typecheck",
+    "test": "pnpm --parallel --filter './src/apps/*' test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "packageManager": "pnpm@11.23.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.10",
+    "@types/node": "^24.13.3",
+    "typescript": "^7.0.2"
+  }
+}
