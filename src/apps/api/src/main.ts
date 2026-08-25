@@ -1,7 +1,18 @@
-import { createApp } from './infrastructure/http/createApp.js';
+import 'dotenv/config';
 
-const port = Number(process.env.PORT ?? 3000);
-const app = createApp();
-app.listen(port, () => {
-  console.log(`API disponible en http://localhost:${port}/api/state`);
+import { envConfigProvider } from './infrastructure/config/env-config-provider.js';
+import { ServerExpress } from './infrastructure/http/createApp.js';
+import { AppRouter } from './infrastructure/routes/app.route.js';
+
+main().catch((error: unknown) => {
+  console.error('No se pudo arrancar el servidor:', error);
+  process.exit(1);
 });
+
+async function main() {
+  const server = new ServerExpress(
+    { port: envConfigProvider.PORT },
+    AppRouter.routes,
+  );
+  await server.start();
+}

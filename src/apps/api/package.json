@@ -16,6 +16,8 @@
   "dependencies": {
     "@boilerplate-hexagonal-monorepo/api-contracts": "workspace:*",
     "@boilerplate-hexagonal-monorepo/domain": "workspace:*",
+    "dotenv": "17.4.2",
+    "env-var": "7.5.0",
     "express": "5.2.1"
   },
   "devDependencies": {

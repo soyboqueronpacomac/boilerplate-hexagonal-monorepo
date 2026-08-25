@@ -7,6 +7,8 @@
 ![Vite](https://img.shields.io/badge/Vite-8.2.2-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-4.1.11-6E9F18?style=flat-square&logo=vitest&logoColor=white)
 ![Biome](https://img.shields.io/badge/Biome-2.5.10-60A5FA?style=flat-square&logo=biome&logoColor=white)
+![dotenv](https://img.shields.io/badge/dotenv-17.4.2-ECD53F?style=flat-square&logo=dotenv&logoColor=black)
+![env--var](https://img.shields.io/badge/env--var-7.5.0-4B32C3?style=flat-square)
 
 Plantilla de monorepo con **pnpm workspaces** que aplica **arquitectura hexagonal** (puertos y adaptadores) tanto en el backend como en el frontend, compartiendo tipos entre ambos a través de un paquete de contratos.
 
@@ -30,7 +32,7 @@ Ejemplo real en este repo — el mismo flujo implementado en ambos lados:
 | Puerto | `application/ports/system-state-provider.ts` | `application/ports/health-checker-api.ts` |
 | Caso de uso | `application/use-cases/check-system-state.ts` | `application/use-cases/health-checker.ts` |
 | Adaptador *driven* (secundario) | `infrastructure/system-state/system-state-provider-in-memory.ts` | `infrastructure/http/health-checker-api-http.ts` |
-| Adaptador *driving* (primario) | `infrastructure/http/createApp.ts` (Express) | `infrastructure/components/state-api.ts` (Custom Element) |
+| Adaptador *driving* (primario) | `infrastructure/routes/api/api.route.ts` (registra `GET /state`) | `infrastructure/components/state-api.ts` (Custom Element) |
 
 El caso de uso traduce entre el modelo de dominio (`@boilerplate-hexagonal-monorepo/domain`) y el contrato externo (`@boilerplate-hexagonal-monorepo/api-contracts`) — el dominio nunca habla el formato de la API.
 
@@ -48,6 +50,8 @@ src/
 ```
 
 Los paquetes de `src/packages/*` se consumen desde las apps como dependencias de workspace (`workspace:*`) y exponen su `dist/` compilado, nunca su código fuente directamente.
+
+`src/apps/api` organiza además sus rutas HTTP en `infrastructure/routes/`: cada recurso tiene su propio router (p. ej. `routes/api/api.route.ts`), y `routes/app.route.ts` los compone en uno solo que `createApp.ts` monta sin saber qué rutas contiene. `createApp.ts` es un punto de composición puro — recibe el `Router` ya ensamblado desde `main.ts`, nunca importa Express en la capa de aplicación.
 
 ## Crear un proyecto nuevo a partir de esta plantilla
 
@@ -70,6 +74,20 @@ Después de clonar por cualquiera de las dos vías, busca y reemplaza `boilerpla
 - Node 24
 - pnpm — la versión exacta está fijada en `packageManager` (`package.json`); con [Corepack](https://nodejs.org/api/corepack.html) habilitado (`corepack enable`) no hace falta instalarlo aparte.
 
+## Variables de entorno
+
+`api` lee su configuración de `process.env` a través de [`env-var`](https://github.com/evanshortiss/env-var), y [`dotenv`](https://github.com/motdotla/dotenv) carga un archivo `.env` si existe. Antes de arrancar, crea `src/apps/api/.env` a partir de `src/apps/api/.env.example`:
+
+```sh
+cp src/apps/api/.env.example src/apps/api/.env
+```
+
+| Variable | Obligatoria | Descripción |
+|---|---|---|
+| `PORT` | Sí | Puerto en el que escucha `api`. Sin ella, el servidor no arranca — falla rápido con un error claro en vez de arrancar a medias. |
+
+`.env` está en `.gitignore`; solo `.env.example` se versiona. Si añades una variable nueva, decláralo en `env-config-provider.ts` (`infrastructure/config/`) y documéntala también en `.env.example`.
+
 ## Puesta en marcha
 
 ```sh
@@ -77,7 +95,7 @@ pnpm install
 pnpm dev
 ```
 
-`pnpm install` compila automáticamente `domain` y `api-contracts` mediante un hook `postinstall` — sin ese paso, `api` y `web` no podrían resolver esos paquetes. `pnpm dev` levanta `api` en `http://localhost:3000` (configurable con la variable de entorno `PORT`) y `web` en `http://localhost:5173` (con proxy de `/api` hacia el backend).
+`pnpm install` compila automáticamente `domain` y `api-contracts` mediante un hook `postinstall` — sin ese paso, `api` y `web` no podrían resolver esos paquetes. `pnpm dev` levanta `api` en el `PORT` de tu `.env` y `web` en `http://localhost:5173` (con proxy de `/api` hacia el backend).
 
 ## Scripts
 
@@ -103,6 +121,8 @@ La arquitectura hexagonal permite una pirámide de tests natural, ya usada en am
 **Una app nueva** en `src/apps/<nombre>`: necesita su propio `package.json` (con `name: "@boilerplate-hexagonal-monorepo/<nombre>"`) y `tsconfig.json` extendiendo de `../../packages/typescript-config/node.json` o `navegador.json` según corresponda. `pnpm-workspace.yaml` ya la detecta automáticamente por estar bajo `src/apps/*`.
 
 **Un paquete compartido nuevo** en `src/packages/<nombre>`: mismo patrón, y decláralo como dependencia (`"@boilerplate-hexagonal-monorepo/<nombre>": "workspace:*"`) en cada app que lo consuma para que pnpm cree el symlink en `node_modules`.
+
+**Una ruta HTTP nueva en `api`**: crea un `Router` de Express en `infrastructure/routes/<recurso>/<recurso>.route.ts` (mismo patrón que `routes/api/api.route.ts`) y móntalo en `routes/app.route.ts`. `createApp.ts` no cambia — solo conoce el `Router` final, nunca rutas individuales.
 
 ## CI
 
