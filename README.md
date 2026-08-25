@@ -49,6 +49,22 @@ src/
 
 Los paquetes de `src/packages/*` se consumen desde las apps como dependencias de workspace (`workspace:*`) y exponen su `dist/` compilado, nunca su código fuente directamente.
 
+## Crear un proyecto nuevo a partir de esta plantilla
+
+Funciona igual en Windows, macOS y Linux — ambas opciones solo necesitan Node instalado.
+
+**Opción 1 — botón de GitHub.** Este repositorio es un [*template repository*](https://github.com/soyboqueronpacomac/boilerplate-hexagonal-monorepo/generate): entra y pulsa **Use this template → Create a new repository**. Te crea un repo nuevo, sin el historial de commits de la plantilla.
+
+**Opción 2 — un comando, sin usar GitHub.** Con [degit](https://github.com/Rich-Harris/degit) (vía `npx`, no hace falta instalarlo):
+
+```sh
+npx degit soyboqueronpacomac/boilerplate-hexagonal-monorepo mi-proyecto
+cd mi-proyecto
+pnpm install
+```
+
+Después de clonar por cualquiera de las dos vías, busca y reemplaza `boilerplate-hexagonal-monorepo` por el nombre de tu proyecto en los `package.json` (raíz y cada paquete/app) y en los imports que usan `@boilerplate-hexagonal-monorepo/*`.
+
 ## Requisitos
 
 - Node 24
