@@ -1,5 +1,13 @@
 # boilerplate-hexagonal-monorepo
 
+![Node.js](https://img.shields.io/badge/Node.js-24-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-11.23.0-F69220?style=flat-square&logo=pnpm&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-7.0.2-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Express](https://img.shields.io/badge/Express-5.2.1-000000?style=flat-square&logo=express&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8.2.2-646CFF?style=flat-square&logo=vite&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-4.1.11-6E9F18?style=flat-square&logo=vitest&logoColor=white)
+![Biome](https://img.shields.io/badge/Biome-2.5.10-60A5FA?style=flat-square&logo=biome&logoColor=white)
+
 Plantilla de monorepo con **pnpm workspaces** que aplica **arquitectura hexagonal** (puertos y adaptadores) tanto en el backend como en el frontend, compartiendo tipos entre ambos a través de un paquete de contratos.
 
 ## Arquitectura
